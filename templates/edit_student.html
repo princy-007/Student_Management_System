@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Edit Student</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Management System</h1>
+
+    <h2>Edit Student</h2>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Enter Name">
+
+    <br><br>
+
+    <input
+        type="number"
+        id="age"
+        placeholder="Enter Age">
+
+    <br><br>
+
+    <input
+        type="text"
+        id="department"
+        placeholder="Enter Department">
+
+    <br><br>
+
+    <button onclick="updateStudent()">
+
+        Update Student
+
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='/students-page'">
+
+        Cancel
+
+    </button>
+
+</div>
+
+<script>
+
+
+    const studentId = Number("{{ student_id }}");
+
+
+</script>
+
+<script src="{{ url_for('static', filename='edit_student.js') }}"></script>
+
+</body>
+
+</html>

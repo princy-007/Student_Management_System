@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Add Student</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Management System</h1>
+
+    <h2>Add Student</h2>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Enter Name">
+
+    <br><br>
+
+    <input
+        type="number"
+        id="age"
+        placeholder="Enter Age">
+
+    <br><br>
+
+    <input
+        type="text"
+        id="department"
+        placeholder="Enter Department">
+
+    <br><br>
+
+    <button onclick="addStudent()">
+
+        Add Student
+
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='/students-page'">
+
+        Back
+
+    </button>
+
+    <p id="message"></p>
+
+</div>
+
+<script src="{{ url_for('static', filename='add_student.js') }}"></script>
+
+</body>
+
+</html>

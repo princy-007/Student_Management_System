@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Management System</h1>
+
+    <h2>Dashboard</h2>
+
+    <button onclick="window.location.href='/students-page'">
+        View Students
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='/add-student'">
+        Add Student
+    </button>
+
+    <br><br>
+
+    <button onclick="window.location.href='/'">
+        Logout
+    </button>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Students</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Student Management System</h1>
+
+    <h2>Students</h2>
+
+    <button onclick="window.location.href='/add-student'">
+        Add Student
+    </button>
+
+    <br><br>
+
+    <table border="1" cellspacing="0" cellpadding="10">
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Department</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="studentTable">
+
+        </tbody>
+
+    </table>
+
+    <br>
+
+    <button onclick="window.location.href='/dashboard'">
+        Back to Dashboard
+    </button>
+
+</div>
+
+<script src="{{ url_for('static', filename='student.js') }}"></script>
+
+</body>
+
+</html>
