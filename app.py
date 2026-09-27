@@ -1,6 +1,29 @@
 from flask import Flask, render_template, request, jsonify
+import sqlite3
 
 app = Flask(__name__)
+def get_db_connection():
+    connection = sqlite3.connect("student_management.db")
+    connection.row_factory = sqlite3.Row
+    return connection
+def create_students_table():
+
+    connection = get_db_connection()
+
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS students (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        department TEXT NOT NULL
+        
+    );
+    """)
+
+    connection.commit()
+
+    connection.close()
+create_students_table()
 
 USERNAME = "admin"
 PASSWORD = "admin123"
@@ -67,41 +90,56 @@ def login():
     })
 
 
+
+
 @app.route("/students", methods=["GET"])
 def get_students():
-    return jsonify(students)
 
+    connection = get_db_connection()
 
-@app.route("/students/<int:id>", methods=["GET"])
-def get_student(id):
+    students = connection.execute(
+        "SELECT * FROM students"
+    ).fetchall()
+
+    connection.close()
+
+    students_list = []
 
     for student in students:
+        students_list.append({
+            "id": student["id"],
+            "name": student["name"],
+            "age": student["age"],
+            "department": student["department"]
+        })
 
-        if student["id"] == id:
-            return jsonify(student)
-
-    return jsonify({
-        "message": "Student Not Found"
-    }), 404
-
+    return jsonify(students_list)
 
 @app.route("/students", methods=["POST"])
 def add_student():
 
     data = request.get_json()
 
-    new_student = {
-        "id": len(students) + 1,
-        "name": data["name"],
-        "age": data["age"],
-        "department": data["department"]
-    }
+    connection = get_db_connection()
 
-    students.append(new_student)
+    connection.execute(
+        """
+        INSERT INTO students (name, age, department)
+        VALUES (?, ?, ?)
+        """,
+        (
+            data["name"],
+            data["age"],
+            data["department"]
+            
+        )
+    )
+
+    connection.commit()
+    connection.close()
 
     return jsonify({
-        "message": "Student Added Successfully",
-        "student": new_student
+        "message": "Student Added Successfully"
     }), 201
 
 
@@ -110,40 +148,60 @@ def update_student(id):
 
     data = request.get_json()
 
-    for student in students:
+    connection = get_db_connection()
 
-        if student["id"] == id:
+    cursor = connection.execute(
+        """
+        UPDATE students
+        SET name = ?, age = ?, department = ?
+        WHERE id = ?
+        """,
+        (
+            data["name"],
+            data["age"],
+            data["department"],
+            id
+        )
+    )
 
-            student["name"] = data["name"]
-            student["age"] = data["age"]
-            student["department"] = data["department"]
+    connection.commit()
 
-            return jsonify({
-                "message": "Student Updated Successfully"
-            })
+    if cursor.rowcount == 0:
+        connection.close()
+        return jsonify({
+            "message": "Student not found"
+        }), 404
+
+    connection.close()
 
     return jsonify({
-        "message": "Student Not Found"
-    }), 404
+        "message": "Student Updated Successfully"
+    })
 
 
 @app.route("/students/<int:id>", methods=["DELETE"])
 def delete_student(id):
 
-    for student in students:
+    connection = get_db_connection()
 
-        if student["id"] == id:
+    cursor = connection.execute(
+        "DELETE FROM students WHERE id = ?",
+        (id,)
+    )
 
-            students.remove(student)
+    connection.commit()
 
-            return jsonify({
-                "message": "Student Deleted Successfully"
-            })
+    if cursor.rowcount == 0:
+        connection.close()
+        return jsonify({
+            "message": "Student not found"
+        }), 404
+
+    connection.close()
 
     return jsonify({
-        "message": "Student Not Found"
-    }), 404
-
+        "message": "Student Deleted Successfully"
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
